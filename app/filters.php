@@ -88,3 +88,27 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::filter('permission', function($route, $request, $value)
+{
+	$permissions = func_get_args();
+	array_shift($permissions);
+	array_shift($permissions);
+
+	if (!Auth::user()->hasPermissions($permissions))
+	{
+		return App::abort(401);
+	}
+});
+
+Route::filter('permissions', function($route, $request, $value)
+{
+	$permissions = func_get_args();
+	array_shift($permissions);
+	array_shift($permissions);
+
+	if (!Auth::user()->hasPermissions($permissions, true))
+	{
+		return App::abort(401);
+	}
+});
